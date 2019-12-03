@@ -87,7 +87,6 @@ def load_cifar10(path, kind='train'):
     elif kind == "test":
         data_file = os.path.join(path,"CIFAR10/test_batch")
         d = unpickle(data_file)
-        print(d)
         images = d[b"data"]
         llabels = d[b"labels"]
     else:
