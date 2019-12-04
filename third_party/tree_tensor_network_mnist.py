@@ -6,6 +6,8 @@ import tncontract as tn
 from itertools import product
 from numpy import linalg as la
 from sklearn import preprocessing
+import logging
+logger = logging.getLogger("qmle")
 
 
 class TreeTensorNetwork(object):
@@ -254,7 +256,7 @@ class TreeTensorNetwork(object):
     def train(self, n_epochs):
         acc_train = 0
         for t in range(1, n_epochs + 1):
-            print("epochs:", t)
+            logger.debug("epochs:", t)
             for i in range(1, 5):
                 #print("layer:", i)
                 for j in range(self.layer_units[i]):
@@ -263,7 +265,7 @@ class TreeTensorNetwork(object):
                         # print(i,j,k)
                         acc_train = self.update_singletensor(i, j, k)
                         acc_train = round(acc_train, 3)
-            print("training average inner product:", acc_train)
+            logger.debug("training average inner product:", acc_train)
         return acc_train
 
     def test(self, test_tensor, label_test_tensor):
