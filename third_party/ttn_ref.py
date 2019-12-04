@@ -24,6 +24,7 @@ def image_subsample(image):
     return image_shrink
 
 def image_normalize(image):
+    #TODO: Better Normalization Method
     return image/256
 
 def get_image_group(images, labels):
@@ -110,22 +111,22 @@ def run_ttn_ref(args, x_train, l_train, x_test, l_test):
     from itertools import product
     import numpy as np
     import pickle
+    import os
 
     from .tree_tensor_network_mnist import TreeTensorNetwork
 
-    data_folder = "./data/mnist/"
-    n_epochs = 3
+    n_epochs = args.num_epoch
 
-    bond_data = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-    bond_inner = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+    bond_data = [args.bond_data]*10
+    bond_inner = [args.bond_inner]*10
     bond_label = 2
 
     n_class = 2
-    n_train_single = 10
+    n_train_single = args.num_train_single
     n_train_each = n_train_single * 9
     n_train = n_train_each * n_class
 
-    n_test_each = 800
+    n_test_each = args.num_test_each
     n_test = n_test_each * 10
 
     layer_units = [16, 8, 4, 2, 1]
@@ -133,7 +134,7 @@ def run_ttn_ref(args, x_train, l_train, x_test, l_test):
 
     # build tensor network---------------------------------------------------
     logger.info("building tensor network")
-    output = open('10_class_model.pkl', 'wb')
+    output = open(os.path.join(args.prefix,'10_class_model.pkl'), 'wb')
 
     ttn = [0 for col in range(10)]
     acc_train = [0 for col in range(10)]

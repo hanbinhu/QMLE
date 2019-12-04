@@ -21,6 +21,16 @@ def get_argparser():
     parser_rep = subparsers.add_parser('reproduce', parents=[logger_parser, common_parser])
     parser_rep.add_argument('-p', '--data-path', metavar='<DIR>', required=True,
             help='Path to the dataset folder.')
+    parser_rep.add_argument('--num-epoch', metavar='<N>', type=int, default=3,
+            help='Number of epochs (default: 3)')
+    parser_rep.add_argument('--bond-data', metavar='<N>', type=int, default=2,
+            help='Bond dimension of data (default: 2)')
+    parser_rep.add_argument('--bond-inner', metavar='<N>', type=int, default=2,
+            help='Bond dimension of TTN inner connection (default: 2)')
+    parser_rep.add_argument('--num-train-single', metavar='<N>', type=int, default=10,
+            help='Number of training samples for a single class (default: 10)')
+    parser_rep.add_argument('--num-test-each', metavar='<N>', type=int, default=800,
+            help='Number of test samples for a single class (default: 800)')
 
     # Parser for run the experiments
     parser_run = subparsers.add_parser('run', parents=[logger_parser, common_parser])
