@@ -1,4 +1,3 @@
-
 def get_argparser():
     import argparse
     parser = argparse.ArgumentParser(prog="qmle", description="Quantum Machine Learning Experiments")
