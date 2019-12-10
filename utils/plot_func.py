@@ -12,3 +12,9 @@ def plot_images(images, size=10):
             ax[j][k].set_axis_off()
             image = np.squeeze(np.transpose(images[i], (1,2,0)))
             ax[j][k].imshow(image)
+
+def plot_heatmap(array):
+    import seaborn as sns
+    import matplotlib.pylab as plt
+    sns.set()
+    ax = sns.heatmap(array, cmap='jet')

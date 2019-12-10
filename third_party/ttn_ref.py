@@ -114,6 +114,7 @@ def run_ttn_ref(args, x_train, l_train, x_test, l_test):
     import os
 
     from .tree_tensor_network_mnist import TreeTensorNetwork
+    from utils.plot_func import plot_heatmap, pltshow
 
     n_epochs = args.num_epoch
 
@@ -180,13 +181,13 @@ def run_ttn_ref(args, x_train, l_train, x_test, l_test):
             scale = 10 ** -4
             fid_array[j][i] = abs(fid) * scale
             fid_array[i][j] = 1.0
-            #print("i,j: " + str(i) + "," + str(j) + "\tfid: " + str(fid))
     
-    #fid_array = np.array(fid_array)
-    import seaborn as sns; sns.set()
-    import matplotlib.pylab as plt
-    ax = sns.heatmap(fid_array, cmap='jet')
-    plt.show()
+    plot_heatmap(fid_array)
+    pltshow()
+    #import seaborn as sns; sns.set()
+    #import matplotlib.pylab as plt
+    #ax = sns.heatmap(fid_array, cmap='jet')
+    #plt.show()
 
     for i, j in product(range(10), range(n_test_each)):
         output_label[i * n_test_each +
