@@ -56,8 +56,8 @@ def contract_local(tensor_list, n):
         nindex = (slice(0,n),)+index
         temp = np.ones((n,))
         if len(tensor_list) > 0:
-            for i in index:
-                temp *= tensor_list[i].data[:,i]
+            for t, i in enumerate(index):
+                temp *= tensor_list[t].data[:,i]
         tensor_result.data[nindex] = temp
     return tensor_result, edge_list
 
@@ -92,8 +92,8 @@ def contract_func4(tensor_list, n):
         tensor_result = tn.random_tensor(*size_list, labels=['S']+['C'+str(i) for i in range(channel)])
         for index in product(*([range(bond)]*channel)):
             temp = np.ones((n,))
-            for i in index:
-                temp *= tensor_list[i].data[:,i]
+            for t, i in enumerate(index):
+                temp *= tensor_list[t].data[:,i]
             nindex = (slice(0,n),)+index
             tensor_result.data[nindex] = temp
     else:
@@ -104,11 +104,11 @@ def contract_func4(tensor_list, n):
                 tensor_result = tn.random_tensor(*size_list, labels=['S']+['C'+str(i) for i in range(channel)]+['U'])
                 for index in product(*([range(bond)]*channel+[range(bond_inner)])):
                     temp = np.ones((n,))
-                    for i in index:
-                        if i != c:
-                            temp *= tensor_list[i].data[:,i]
+                    for t, i in enumerate(index):
+                        if t != c:
+                            temp *= tensor_list[t].data[:,i]
                         else:
-                            temp *= tensor_list[i].data[:,i,index[-1]]
+                            temp *= tensor_list[t].data[:,i,index[-1]]
                     nindex = (slice(0,n),)+index
                     tensor_result.data[nindex] = temp
                 break
