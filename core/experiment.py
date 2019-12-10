@@ -1,19 +1,19 @@
 import logging
 logger = logging.getLogger("qmle")
 
-def train(ctype, x, y, label_names, bond_inner, num_epoch):
+def train(ctype, x, y, label_names, bond_inner, layer_channel, num_epoch):
     import numpy as np
     from .tree_tn import TTN
     model_list = []
-    size = x.shape[0]
-    channel = x.shape[2]
-    bond_data = x.shape[3]
+    size = x.shape[1]
+    channel = x.shape[3]
+    bond_data = x.shape[4]
     if ctype == 'one-vs-all':
         n_class = len(label_names)
         n_each = y.shape[0]//n_class
         for i in range(n_class):
-            model = TTN(size, channel, bond_data, bond_inner, 2)
-            cx = x[:,:,:,:,n_each*i:n_each*(i+1)]
+            model = TTN(size, channel, bond_data, bond_inner, 2, layer_channel)
+            cx = x[n_each*i:n_each*(i+1),:,:,:,:]
             cy = y[n_each*i:n_each*(i+1),:]
             model.train(cx, cy, num_epoch)
             logger.info(f"{i+1}-th classifier's training for '{label_names[i]}' completed.'")
@@ -25,7 +25,7 @@ def train(ctype, x, y, label_names, bond_inner, num_epoch):
             logger.info(f"{i+1}-th classifier's training accuracy for '{label_names[i]}': {cacc*100:.2f}%")
             model_list.append(model)
     elif ctype == 'one-hot':
-        model = TTN(size, channel, bond_data, bond_inner, len(label_names))
+        model = TTN(size, channel, bond_data, bond_inner, len(label_names), layer_channel)
         model.train(x, y, num_epoch)
         logger.info(f"One-hot classifier training completed.'")
         p = model.predict(x)
@@ -54,7 +54,7 @@ def test(model_list, x, y, label_names):
         n_each = n_tot//n_class
         for i in range(n_class):
             model = model_list[i]
-            cx = x[:,:,:,:,n_each*i:n_each*(i+1)]
+            cx = x[n_each*i:n_each*(i+1),:,:,:,:]
             cy = y[n_each*i:n_each*(i+1),:]
             p = model.predict(cx)
             cp = np.argmax(p,axis=1).tolist()
@@ -75,7 +75,7 @@ def run_core(args, images_train, labels_train, images_test, labels_test, label_n
 
     logger.info('Data preparation completed.')
 
-    model_list = train(args.classifier_type, x_train, y_train, label_names, args.bond_inner, args.num_epoch)
+    model_list = train(args.classifier_type, x_train, y_train, label_names, args.bond_inner, args.layer_channel, args.num_epoch)
 
     logger.info('Training completed.')
 

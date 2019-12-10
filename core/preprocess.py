@@ -65,7 +65,7 @@ def preprocess_data_ova(data_group, n_sample):
     import numpy as np
     from itertools import product
     size, _, channel, n_class, n_tot, bond_data = data_group.shape
-    x = np.zeros((size, size, channel, bond_data, n_sample), dtype=np.float64)
+    x = np.zeros((n_sample, size, size, channel, bond_data), dtype=np.float64)
     y = np.zeros((n_sample, 2), dtype=np.float64)
 
     n_each = n_sample // n_class
@@ -74,14 +74,14 @@ def preprocess_data_ova(data_group, n_sample):
     for current_class in range(n_class):
         s = current_class*n_each
         for k, m in product(range(bond_data), range(n_each_one)):
-            x[:, :, :, k, s+m] = data_group[:, :, :, current_class, m, k]
+            x[s+m, :, :, :, k] = data_group[:, :, :, current_class, m, k]
             y[s+m, 0] = 1.0
 
         cc = set([current_class])
         rest = set(range(n_class)) - cc
 
         for k, l, m in product(range(bond_data), range(n_class-1), range(int(n_each_sub))):
-            x[:, :, :, k, s+n_each_one+l*n_each_sub+m] = data_group[:, :, :, list(rest)[l], m, k]
+            x[s+n_each_one+l*n_each_sub+m, :, :, :, k] = data_group[:, :, :, list(rest)[l], m, k]
             y[s+n_each_one+l*n_each_sub+m, 1] = 1.0
 
     return x, y
@@ -90,14 +90,14 @@ def preprocess_data_oh(data_group, n_sample):
     import numpy as np
     from itertools import product
     size, _, channel, n_class, n_tot, bond_data = data_group.shape
-    x = np.zeros((size, size, channel, bond_data, n_sample), dtype=np.float64)
+    x = np.zeros((n_sample, size, size, channel, bond_data), dtype=np.float64)
     y = np.zeros((n_sample, n_class), dtype=np.float64)
     n_each = n_sample // n_class
 
     for current_class in range(n_class):
         s = current_class*n_each
         for k, m in product(range(bond_data), range(n_each)):
-            x[:, :, :, k, s+m] = data_group[:, :, :, current_class, m, k]
+            x[s+m, :, :, :, k] = data_group[:, :, :, current_class, m, k]
             y[s+m, current_class] = 1.0
 
     return x, y

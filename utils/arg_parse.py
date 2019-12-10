@@ -50,6 +50,8 @@ def get_argparser():
             help='Bond dimension of the data. (default: 2)')
     parser_run.add_argument('--bond-inner', metavar='<N>', type=int, default=2,
             help='Inner bond dimension of the TTN. (default: 2)')
+    parser_run.add_argument('--layer-channel', metavar='<N>', type=int, default=0,
+            help='The layer to combine all the channel in the TTN. (default: 0)')
     parser_run.add_argument('--num-epoch', metavar='<N>', type=int, default=3,
             help='Number of epochs. (default: 3)')
     return parser
