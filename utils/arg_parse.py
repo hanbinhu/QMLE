@@ -39,7 +39,19 @@ def get_argparser():
             help='Input datasets ({"MNIST", "Fashion-MNIST", "CIFAR10"}).')
     parser_run.add_argument('-p', '--data-path', metavar='<DIR>', required=True,
             help='Path to the dataset folder.')
-
+    parser_run.add_argument('-c', '--classifier-type', metavar='<CLASSIFIER-TYPE>',
+            choices=['one-vs-all', 'one-hot'], default='one-hot',
+            help='The type of classifier ({\'one-vs-all\',\'one-hot\'})')
+    parser_run.add_argument('--num-train', metavar='<N>', type=int, default=1800,
+            help='Number of training samples. (default: 1800)')
+    parser_run.add_argument('--num-test', metavar='<N>', type=int, default=9000,
+            help='Number of testing samples. (default: 9000)')
+    parser_run.add_argument('--bond-data', metavar='<N>', type=int, default=2,
+            help='Bond dimension of the data. (default: 2)')
+    parser_run.add_argument('--bond-inner', metavar='<N>', type=int, default=2,
+            help='Inner bond dimension of the TTN. (default: 2)')
+    parser_run.add_argument('--num-epoch', metavar='<N>', type=int, default=3,
+            help='Number of epochs. (default: 3)')
     return parser
 
 def config_logger(args):

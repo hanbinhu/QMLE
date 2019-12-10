@@ -96,7 +96,7 @@ def load_cifar10(path, kind='train'):
 
     f_label_name = os.path.join(path,"CIFAR10/batches.meta")
     d = unpickle(f_label_name)
-    label_names = d[b"label_names"]
+    label_names = [s.decode("utf-8") for s in d[b"label_names"]]
 
     images = np.reshape(images, (len(labels), 3, 32, 32))
 
