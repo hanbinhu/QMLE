@@ -1,6 +1,5 @@
 import logging
 logger = logging.getLogger('qmle')
-logging.disable(logging.FATAL)
 
 def image_subsample(image):
     import numpy as np
@@ -116,8 +115,6 @@ def run_ttn_ref(args, x_train, l_train, x_test, l_test):
 
     from .tree_tensor_network_mnist import TreeTensorNetwork
 
-    #print("args: " + str(args))
-
     n_epochs = args.num_epoch
 
     bond_data = [args.bond_data]*10
@@ -152,21 +149,16 @@ def run_ttn_ref(args, x_train, l_train, x_test, l_test):
 
         ttn[i] = TreeTensorNetwork(
             data, labels, bond_data[i], bond_inner[i], bond_label, layer_units)
-        
+
         # Training
         logger.info(f"Training number {i}-th binary classifier:")
         acc_train[i] = ttn[i].train(n_epochs)
         logger.info(f"training inner product: {acc_train[i]}")
 
-        #print("i: " + str(i))
-        #print("ttn: " + str(ttn[i]))
-
         # Testing for each classifier
         logger.info(f"Testing number {i}-th binary classifier:")
-        #print("data_test: " + str(data_test) + "\tlabel_test: " + str(labels_test))
         acc_test1[i], acc_test2[i] = ttn[i].test(data_test, labels_test)
         logger.info(f"testing accuracy {acc_test2[i]}")
-        #print(str(i) + "," + str(acc_train[i]) + "," + str(acc_test1[i]) + "," + str(acc_test2[i]))
 
         pickle.dump(ttn, output)
     output.close()
@@ -178,8 +170,6 @@ def run_ttn_ref(args, x_train, l_train, x_test, l_test):
     for i in range(10):
         test_tensor = preprocess_test(x_test, l_test, n_test, n_test_each, bond_data[i])
         output_vector[:, i] = ttn[i].outputvalue(test_tensor, n_test)
-        #print("i: " + str(i) + "\toutput_vector: " + str(output_vector))
-        #print("i: " + str(i) + "\ttype: " + str(type(output_vector[:,i])) + "\t" + "shape: " + str(output_vector[:,i].shape))
     
     fid_array = np.zeros((10,10))
     for i in range(10):
@@ -201,7 +191,6 @@ def run_ttn_ref(args, x_train, l_train, x_test, l_test):
     for i, j in product(range(10), range(n_test_each)):
         output_label[i * n_test_each +
                      j] = np.argmax(output_vector[i * n_test_each + j, :])
-        #print("output label shape: " + str(output_label.shape))
         if output_label[i * n_test_each + j] == i:
             count = count + 1
 
